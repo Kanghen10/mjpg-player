@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MJPEG Viewer</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+
+    #mjpeg {
+      width: 100vw;
+      height: 100vh;
+      object-fit: contain;
+      display: block;
+      background-color: black;
+    }
+
+    #error {
+      color: red;
+      text-align: center;
+      margin-top: 20%;
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <img id="mjpeg" src="" alt="MJPEG Stream"/>
+  <div id="error"></div>
+
+  <script>
+    function getStreamUrl() {
+      const hash = window.location.hash;
+      if (hash && hash.length > 1) {
+        return decodeURIComponent(hash.substring(1));
+      }
+      return null;
+    }
+
+    function enterFullScreen(element) {
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+      } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+      }
+    }
+
+    window.onload = () => {
+      const mjpegUrl = getStreamUrl();
+      const img = document.getElementById('mjpeg');
+      const err = document.getElementById('error');
+
+      if (mjpegUrl) {
+        img.src = mjpegUrl;
+        enterFullScreen(document.documentElement);
+      } else {
+        err.textContent = "⚠️ MJPEG URL belum ditentukan. Tambahkan di URL seperti: #http://IP:PORT/stream.mjpg";
+      }
+
+      img.onerror = () => {
+        err.textContent = "❌ Gagal memuat stream MJPEG. Periksa URL atau koneksi.";
+      };
+    };
+  </script>
+</body>
+</html>
