@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MJPG Player</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+    #player {
+      width: 100vw;
+      height: 100vh;
+      object-fit: contain;
+      background: black;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <img id="player" alt="MJPG Stream"/>
+
+  <script>
+    function getStreamURL() {
+      const hash = window.location.hash;
+      if (hash && hash.length > 1) {
+        return decodeURIComponent(hash.substring(1));
+      }
+      return null;
+    }
+
+    function enterFullScreen(element) {
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+      } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
+      } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+      }
+    }
+
+    window.onload = () => {
+      const streamUrl = getStreamURL();
+      const player = document.getElementById("player");
+
+      if (streamUrl) {
+        player.src = streamUrl;
+        enterFullScreen(document.documentElement);
+      } else {
+        document.body.innerHTML = '<p style="color:white;text-align:center;margin-top:20%">URL stream MJPG tidak ditemukan di hash.</p>';
+      }
+    };
+  </script>
+</body>
+</html>
